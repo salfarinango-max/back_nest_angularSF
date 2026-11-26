@@ -8,7 +8,7 @@ import { JwtStrategy } from '../autch/jwt.strategy.js';
     imports: [
         JwtModule.register({
             secret: "MI_CODIGO_SECRETO",
-            signOptions: { expiresIn: '60s' }
+            signOptions: { expiresIn: '1h' }
         })
     ],
     controllers: [AutchController],

@@ -10,8 +10,8 @@ export const databaseProvider = [
         type: 'postgres',
         host: config.get('HOST'),
         port: Number(config.get('PORT')),
-        username: config.get('USERNAME'),
-        password: config.get('PASSWORD'),
+        username: config.get('USERNAME')||'root',
+        password: config.get('PASSWORD')||'prueba',
         database: config.get('DATABASE'),
       });
 

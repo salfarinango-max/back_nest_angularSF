@@ -1,18 +1,31 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller.js';
+import { Injectable } from '@nestjs/common';
+import * as fs from 'fs';
+import { parse } from 'dotenv';
 
-describe('AuthController', () => {
-  let controller: AuthController;
+@Injectable()
+export class ConfigService {
+  private readonly envConfig: { [key: string]: string };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
-    }).compile();
+  constructor() {
+    const isDevelopmentEnv = process.env.NODE_ENV !== 'production';
+    if (isDevelopmentEnv) {
+      const envFilePath = process.cwd() + '/.env.development';
+      const existsPath = fs.existsSync(envFilePath);
+      if (!existsPath) {
+        console.log('.env.development no existe DEVELOPMENT');
+      }
+      this.envConfig = parse(fs.readFileSync(envFilePath));
+    } else {
+      const envFilePath = process.cwd() + '/.env.production';
+      const existsPath = fs.existsSync(envFilePath);
+      if (!existsPath) {
+        console.log('.env.production no existe PRODUCTION');
+      }
+      this.envConfig = parse(fs.readFileSync(envFilePath));
+    }
+  }
 
-    controller = module.get<AuthController>(AuthController);
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+  get(key: string): string {
+    return this.envConfig[key];
+  }
+}
